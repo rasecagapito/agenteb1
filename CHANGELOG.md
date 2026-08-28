@@ -10,6 +10,13 @@ Toda carga registra em que versão rodou (`projeto.mestre_versao`). Não trocar 
 
 ## [Não publicado]
 
+## [1.2.1] — 2026-08-28
+
+### Corrigido
+- `Q27_TCD3_validar.sql` e `context/validacao.md` afirmavam `abertos = total = COUNT TCD2`.
+  Com N vigências (1.2.0) o total é maior que o COUNT da TCD2 e só os abertos batem —
+  o esperado desatualizado faria a validação parecer falha numa carga correta.
+
 ## [1.2.0] — 2026-08-28
 
 ### Adicionado

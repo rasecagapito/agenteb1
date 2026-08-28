@@ -55,5 +55,5 @@
 Campos obrigatórios: `projeto.nome` e `projeto.mestre_versao`. Totais, OBNI, OUSG, skips e datas saem **daquele** SAP e daquela planilha.
 
 ## Estado
-- **Fase**: mestre v1.2.0 (ver `VERSION` / `CHANGELOG.md`) — geradores com testes; TCD3 em teste, produção 1:1 e N vigências; montagem das grades de entrada ainda manual
+- **Fase**: mestre v1.2.1 (ver `VERSION` / `CHANGELOG.md`) — geradores com testes; TCD3 em teste, produção 1:1 e N vigências; montagem das grades de entrada ainda manual
 - Dinâmico: `memory/handoff.md`

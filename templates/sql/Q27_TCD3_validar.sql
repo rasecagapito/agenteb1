@@ -1,5 +1,6 @@
--- Q27 | TCD3 — UMA query. Substituir ESPERADO pelos totais DESTE projeto.
--- Teste: 1 aberto por TCD2, EfctTo NULL, TaxCode NULL, EfctFrom = test_from do config.
+-- Q27 | TCD3 — UMA query. Substituir ESPERADO pelos totais DESTA carga.
+-- Teste / producao 1:1: 1 aberto por TCD2, EfctTo NULL, TaxCode NULL.
+-- N vigencias (TCD3_CARGA): total > COUNT TCD2; abertos = COUNT TCD2 (1 por regra).
 
 SELECT
   CAST('TCD3_total' AS NVARCHAR(40)) AS "Check",
@@ -27,4 +28,6 @@ INNER JOIN OTCD T0 ON T3."TcdId" = T0."AbsId"
 WHERE T0."TcdType" = 'MI' AND T3."TaxCode" IS NOT NULL
 
 ORDER BY 1
--- Teste: EfctTo_2099=0, TaxCode_preenchido=0, abertos = total = COUNT TCD2 deste projeto
+-- Sempre: EfctTo_2099 = 0, TaxCode_preenchido = 0.
+-- Teste / producao 1:1: abertos = total = COUNT TCD2 desta carga.
+-- N vigencias:          abertos = COUNT TCD2; total = COUNT da geracao TCD3.
