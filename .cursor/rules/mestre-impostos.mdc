@@ -1,0 +1,11 @@
+---
+description: mestre-impostos — carga TCD SAP B1. Não fixar cliente.
+alwaysApply: true
+---
+
+Cérebro: `AGENTS.md`. Cada carga tem `projeto.nome`. Não reutilizar IDs de outro projeto.
+
+TCD1 tela → TCD2 → TCD3 → TCD5. TCD4 = WT, fora.
+
+NULL no slot vazio e no EfctTo aberto. Tipo trib = OBNI.ID deste SAP. UsageCode = OUSG.ID deste SAP.
+80401-9 = cadastro faltante. Parar. INSERT no HANA Studio. Depois Atualizar na Definicao.

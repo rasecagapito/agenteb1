@@ -1,0 +1,11 @@
+{
+  "gates": [
+    "projeto.nome preenchido e diferente de placeholder",
+    "TCD1 KeyFld extraidos deste CompanyDB",
+    "TCD2 Atualizar sem 80401-9 antes de TCD3",
+    "TCD3.TaxCode NULL no MI",
+    "TCD5.UsageCode existe em OUSG desta base",
+    "lotes INSERT <= batch_size",
+    "evoluir.md ao fechar o projeto"
+  ]
+}

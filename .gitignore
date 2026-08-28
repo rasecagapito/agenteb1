@@ -1,0 +1,7 @@
+config.yaml
+saida/
+__pycache__/
+*.pyc
+.env
+*.xlsx
+.DS_Store

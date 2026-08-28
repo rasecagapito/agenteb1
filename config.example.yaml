@@ -1,0 +1,55 @@
+# Copiar para config.yaml e preencher. Nunca commitar senha.
+
+projeto:
+  nome: ""                    # OBRIGATÓRIO. Nome desta carga. Ex.: CLIENTE_A. Este arquivo não sobe ao git.
+  company_db: ""              # CompanyDB deste SAP. Vazio até extrair.
+  tcd_type: MI                # MI = material item. Não usar WT aqui (TCD4).
+
+otcd:
+  abs_id: null                # Q01 neste CompanyDB. Não assumir 1.
+
+saida: saida                  # pasta relativa; cria saida/{nome}/TCD2|TCD3|TCD5
+
+planilha:
+  arquivo: ""                 # .xlsx deste projeto
+  aba: ""                     # aba oficial da determinação
+  # Mapear colunas DESTE arquivo (nomes reais da primeira linha):
+  col_prioridade: Prioridade
+  col_efetivo_desde: "Efetivo desde"
+  col_uso: ""                 # coluna de utilização (texto)
+  # As 5 chaves seguem a TCD1 deste SAP, não de outro projeto:
+  col_valor_chave: ["Valor Chave 1", "Valor Chave 2", "Valor Chave 3", "Valor Chave 4", "Valor Chave 5"]
+
+# IDs KeyFld da tela Definição DESTE CompanyDB (query templates/sql/Q02_TCD1.sql)
+# prioridade: [AbsId_TCD1, KeyFld_1, KeyFld_2, KeyFld_3, KeyFld_4, KeyFld_5]
+tcd1: {}
+
+# Nomes das 5 chaves por prioridade (como na planilha), alinhados à TCD1 acima
+chaves_por_prioridade: {}
+
+skip_prioridades: []          # ex. [21] só se ESTA carga não puder gravar essa regra
+
+mapeamentos:
+  grupo_item: {}              # nome da planilha → ItmsGrpCod deste SAP. Ex.: "FERT. DE SOLO": "105"
+  # Nunca copiar BPLId/CardCode de outro projeto.
+
+obni:
+  index_type: null            # descobrir neste SAP (não assumir 18)
+
+ousg:
+  extracao: ""                # xlsx/csv com ID_Interno + Codigo desta base
+
+ostc:
+  extracao: ""
+
+tcd3:
+  modo_teste: true            # true = 1 período aberto por TCD2
+  test_from: ""               # obrigatório se modo_teste; combinado com o cliente DESTE projeto
+  # producao: modo_teste false → datas da planilha
+
+tcd5:
+  batch_size: 500             # HANA Studio estoura console acima disso
+
+hana:
+  insert_so_studio: true
+  select_no_gerador_b1: true
