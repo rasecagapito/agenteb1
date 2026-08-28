@@ -10,9 +10,52 @@ python scripts/gerar_tcd5.py --config caminho/config.yaml
 python scripts/fatiar_inserts.py --arquivo saida/NOME/TCD5/TCD5_INSERT.sql --lote 500
 ```
 
-Arquivos intermediários **deste** projeto (não copiar de outro nome):
+TCD2, TCD3 e TCD5 já saem fatiados em `hana.batch_size` (`_p01.sql`, `_p02.sql`…).
+`fatiar_inserts.py` só é necessário para arquivo montado à mão.
 
-- `TCD2/TCD2_CARGA.xlsx` — Prioridade, AbsId_TCD1, DispOrder, KeyFld_1_V..5_V (NULL = vazio)
-- `TCD5/TCD5_CARGA.xlsx` — AbsId_TCD3, UsageCode ou Usage_texto, TaxCode, ExpTaxCode, PurTaxCode
+## Grades de entrada
+
+Montadas por você a partir da planilha desta carga (não copiar de outro nome).
+Ficam em `saida/{nome}/`, junto do que é gerado.
+
+### `TCD2/TCD2_CARGA.xlsx`
+
+| Coluna | Obrigatória | Nota |
+|---|---|---|
+| `Prioridade` | se houver `skip_prioridades` | usada no filtro e na ordenação |
+| `AbsId_TCD1` | sim | AbsId da TCD1 **deste** CompanyDB (Q02) |
+| `DispOrder` | não | ausente = ordem da linha |
+| `KeyFld_1_V`..`KeyFld_5_V` | sim (podem ser vazias) | vazio → `NULL`, nunca `0` |
+| `EfctFrom` | só em TCD3 de produção | data da planilha desta carga |
+| `EfctTo` | não | vazio ou `2099-12-31` → `NULL` (aberto) |
+
+**Contrato de identidade**: depois de aplicar `skip_prioridades` e ordenar, a linha *i*
+(1-based) vira `TCD2.AbsId = i` e `TCD3.Tcd2Id = i`. Os dois geradores leem a grade
+pela mesma função (`lib_tcd.ler_grade_tcd2`) justamente para não divergirem.
+
+### `TCD5/TCD5_CARGA.xlsx`
+
+`AbsId_TCD3`, `UsageCode` **ou** `Usage_texto`, `TaxCode`, `ExpTaxCode`, `PurTaxCode`.
+Sem match em OUSG a linha vai para `BLOQUEADOS.xlsx` — não se inventa ID.
 
 OUSG: exportar `templates/sql/Q03_OUSG.sql` neste CompanyDB → `ousg.extracao`.
+
+## TCD3: teste e produção
+
+- `tcd3.modo_teste: true` — um período aberto por TCD2, a partir de `tcd3.test_from`.
+- `tcd3.modo_teste: false` — uma vigência por linha da grade, lendo `EfctFrom`/`EfctTo`.
+  Data faltando ou `EfctTo` anterior a `EfctFrom` → para, sem gerar parcial.
+
+Hoje a produção assume **uma vigência por combinação de chaves** (1:1 TCD2→TCD3).
+Vários períodos para a mesma combinação ainda não são suportados.
+
+## Testes
+
+Só stdlib + as dependências acima:
+
+```
+python -m unittest discover -s tests -v
+```
+
+Cobrem o alinhamento TCD2/TCD3 sob `skip_prioridades`, a produção da TCD3,
+`NULL` em slot vazio e o fatiamento por `batch_size`.

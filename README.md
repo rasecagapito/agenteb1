@@ -83,7 +83,9 @@ pip install pandas openpyxl pyyaml
 python scripts/gerar_tcd2.py --config config.yaml
 python scripts/gerar_tcd3.py --config config.yaml
 python scripts/gerar_tcd5.py --config config.yaml
-python scripts/fatiar_inserts.py --arquivo saida/TCD5_INSERT.sql --lote 500
+python -m unittest discover -s tests      # sem dependência extra
 ```
+
+Contrato das grades de entrada e diferença teste/produção da TCD3: `scripts/README.md`.
 
 Saída em `saida/{projeto.nome}/TCD2|TCD3|TCD5/`.

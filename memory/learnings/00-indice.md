@@ -11,4 +11,5 @@ Método só. IDs de cliente ficam no repo do `projeto.nome`.
 - teste-vs-producao.md
 - taxcode-compra.md
 - identidade-funcional.md
+- grade-unica.md
 - evoluir-por-projeto.md

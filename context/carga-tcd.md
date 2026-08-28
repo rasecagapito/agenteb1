@@ -19,7 +19,7 @@ Gerar: `scripts/gerar_tcd2.py`. Validar: `templates/sql/Q22_TCD2_validar.sql` (t
 MI: `TaxCode` fica NULL. Código é TCD5.
 
 - **Teste** (`tcd3.modo_teste: true`): 1 período aberto por TCD2. `EfctFrom` = `tcd3.test_from` combinado com o cliente. `EfctTo` = NULL.
-- **Produção** (`modo_teste: false`): períodos e cortes da planilha deste projeto.
+- **Produção** (`modo_teste: false`): vigências da planilha desta carga, nas colunas `EfctFrom`/`EfctTo` da grade TCD2. Data faltando → o gerador para, não gera parcial. Hoje: uma vigência por combinação (1:1).
 
 Nunca gravar `2099-12-31` em `EfctTo`.
 
@@ -28,7 +28,7 @@ Nunca gravar `2099-12-31` em `EfctTo`.
 UsageCode = `OUSG.ID` desta extração. Texto da planilha não entra. Sem match → bloquear linha (aba BLOQUEADOS), não inventar ID.
 TaxCode/Exp/Pur devem existir em OSTC desta base. Utilização só de compra pode ter TaxCode (venda) vazio e PurTaxCode preenchido — não tratar como lote falho sem olhar Q30.
 
-HANA: fatiar em `tcd5.batch_size` (500). Arquivo único grande → *SQL console content is too large* / 257.
+HANA: todas as camadas saem fatiadas em `hana.batch_size` (500). Arquivo único grande → *SQL console content is too large* / 257.
 Unique constraint em AbsId → limpar TCD5 desta determinação antes de relançar.
 
 ## Gate de tela

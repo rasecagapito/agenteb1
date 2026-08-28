@@ -5,3 +5,5 @@ __pycache__/
 .env
 *.xlsx
 .DS_Store
+__pycache__/
+.pytest_cache/

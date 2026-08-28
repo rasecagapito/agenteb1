@@ -44,13 +44,15 @@ ostc:
   extracao: ""
 
 tcd3:
-  modo_teste: true            # true = 1 período aberto por TCD2
-  test_from: ""               # obrigatório se modo_teste; combinado com o cliente DESTE projeto
-  # producao: modo_teste false → datas da planilha
+  modo_teste: true            # true = 1 período aberto por TCD2 (test_from)
+  test_from: ""               # obrigatório se modo_teste; combinado com o cliente DESTA carga
+  # modo_teste: false → produção. Exige colunas EfctFrom (e opcional EfctTo)
+  # em TCD2_CARGA.xlsx, com as datas DESTA planilha. EfctTo vazio = aberto.
 
 tcd5:
-  batch_size: 500             # HANA Studio estoura console acima disso
+  batch_size: 500             # legado; hana.batch_size manda
 
 hana:
+  batch_size: 500             # lote de INSERT em TODAS as camadas. HANA Studio estoura acima disso
   insert_so_studio: true
   select_no_gerador_b1: true

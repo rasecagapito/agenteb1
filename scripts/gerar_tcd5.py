@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lib_tcd import (
     arg_config,
+    batch_size,
     load_config,
     map_uso,
     nval,
@@ -60,7 +61,7 @@ def main():
     by_exact, by_norm = load_ousg(Path(ousg_path))
     df = pd.read_excel(src5, sheet_name=0)
     inserts, bloqueados = [], []
-    batch = int((cfg.get("tcd5") or {}).get("batch_size") or 500)
+    batch = batch_size(cfg)
     absid = 0
     for _, r in df.iterrows():
         tcd3 = int(r["AbsId_TCD3"])

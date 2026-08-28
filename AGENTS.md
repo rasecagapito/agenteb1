@@ -55,5 +55,5 @@
 Campos obrigatórios: `projeto.nome` e `projeto.mestre_versao`. Totais, OBNI, OUSG, skips e datas saem **daquele** SAP e daquela planilha.
 
 ## Estado
-- **Fase**: mestre v1.0.0 (ver `VERSION` / `CHANGELOG.md`) — método extraído; repo público-por-suposição, sem dado de cliente; pronto para a próxima carga nomeada
+- **Fase**: mestre v1.1.0 (ver `VERSION` / `CHANGELOG.md`) — geradores com testes; TCD3 de produção disponível; montagem das grades ainda manual
 - Dinâmico: `memory/handoff.md`

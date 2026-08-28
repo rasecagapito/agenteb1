@@ -161,6 +161,49 @@ def write_batches(inserts: list[str], out_dir: Path, stem: str, batch_size: int,
     ]
     (out_dir / f"{stem}.sql").write_text("\n".join(idx), encoding="utf-8")
 
+def batch_size(cfg: dict) -> int:
+    """Lote de INSERT para o HANA Studio. `hana.batch_size` manda; `tcd5.batch_size` é o legado."""
+    h = (cfg.get("hana") or {}).get("batch_size")
+    t5 = (cfg.get("tcd5") or {}).get("batch_size")
+    return int(h or t5 or 500)
+
+
+def ler_grade_tcd2(cfg: dict) -> pd.DataFrame:
+    """Grade TCD2 desta carga: filtrada por `skip_prioridades`, ordenada e numerada.
+
+    Contrato de identidade — TCD2 e TCD3 dependem dele:
+        linha i (1-based, DEPOIS do skip)  =>  TCD2.AbsId = i  e  TCD3.Tcd2Id = i
+
+    Todo gerador que precise da grade DEVE chamar esta função. Ler o xlsx direto
+    reintroduz o desalinhamento entre camadas quando `skip_prioridades` não é vazio.
+    A coluna `AbsId` do retorno é calculada aqui e sobrescreve a do arquivo, se houver.
+    """
+    src = saida_camada(cfg, "TCD2") / "TCD2_CARGA.xlsx"
+    nome = require_projeto(cfg)
+    if not src.exists():
+        raise SystemExit(
+            f"{src} não existe. Monte a grade TCD2 DESTA carga ({nome}) com colunas "
+            "Prioridade, AbsId_TCD1, DispOrder, KeyFld_1_V..5_V "
+            "(EfctFrom/EfctTo se a TCD3 for de produção)."
+        )
+    df = pd.read_excel(src, sheet_name=0)
+    if "AbsId_TCD1" not in df.columns:
+        raise SystemExit(f"{src} sem coluna AbsId_TCD1 (AbsId da TCD1 deste CompanyDB).")
+    skip = {int(x) for x in (cfg.get("skip_prioridades") or [])}
+    if skip:
+        if "Prioridade" not in df.columns:
+            raise SystemExit(
+                f"skip_prioridades={sorted(skip)} exige coluna Prioridade em {src.name}."
+            )
+        prio = pd.to_numeric(df["Prioridade"], errors="coerce")
+        df = df[~prio.isin(skip)]
+    ordem = [c for c in ("Prioridade", "DispOrder") if c in df.columns]
+    if ordem:
+        df = df.sort_values(ordem, kind="stable")
+    df = df.reset_index(drop=True)
+    df["AbsId"] = df.index + 1
+    return df
+
 
 def arg_config() -> Path:
     p = argparse.ArgumentParser()
