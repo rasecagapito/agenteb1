@@ -1,11 +1,14 @@
 {
   "gates": [
     "projeto.nome preenchido e diferente de placeholder",
+    "projeto.mestre_versao = tag em que esta carga roda; nao muda ate o wrapup",
     "TCD1 KeyFld extraidos deste CompanyDB",
     "TCD2 Atualizar sem 80401-9 antes de TCD3",
     "TCD3.TaxCode NULL no MI",
     "TCD5.UsageCode existe em OUSG desta base",
     "lotes INSERT <= batch_size",
-    "evoluir.md ao fechar o projeto"
+    "history da carga no repo do projeto, nao no mestre",
+    "evoluir.md ao fechar o projeto: licao anonima + bump VERSION/CHANGELOG + tag",
+    "nenhum arquivo do mestre cita cliente, base ou carga"
   ]
 }

@@ -1,0 +1,6 @@
+# renomear para .gitignore
+config.yaml
+*.env
+__pycache__/
+*.pyc
+.DS_Store

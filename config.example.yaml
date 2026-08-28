@@ -4,6 +4,7 @@ projeto:
   nome: ""                    # OBRIGATÓRIO. Nome desta carga. Ex.: CLIENTE_A. Este arquivo não sobe ao git.
   company_db: ""              # CompanyDB deste SAP. Vazio até extrair.
   tcd_type: MI                # MI = material item. Não usar WT aqui (TCD4).
+  mestre_versao: ""           # tag do mestre-impostos usada NESTA carga (ex. v1.0.0). Ver VERSION. Não trocar no meio da carga.
 
 otcd:
   abs_id: null                # Q01 neste CompanyDB. Não assumir 1.

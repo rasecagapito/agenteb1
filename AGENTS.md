@@ -5,7 +5,7 @@
 ## Protocolo de Arranque (qualquer IA)
 1. Ler `memory/handoff.md`.
 2. Ler `context/carga-tcd.md` e `context/evolucao.md`.
-3. Exigir **nome do projeto** (config `projeto.nome`). Sem nome → parar. Não assumir cliente anterior.
+3. Exigir **nome do projeto** (`projeto.nome`) e **versão do mestre** (`projeto.mestre_versao` = tag em que esta carga roda; ver `VERSION`). Sem nome → parar. Não assumir cliente anterior.
 4. Carregar só o `context/` da tarefa. Não copiar AbsId, BPLId, CardCode, OBNI.ID, OUSG.ID de outro projeto.
 
 ## Identidade
@@ -40,6 +40,7 @@
 9. Script HANA grande: lotes de 500 INSERT. Relançar TCD5 só depois de limpar residual (unique AbsId).
 10. Depois de cada projeto: `automation/procedures/evoluir.md` — método sobe ao mestre; dados do cliente não.
 11. Privacidade: nenhum arquivo deste repo nomeia cliente, base ou carga. Nome vive só em `config.yaml` (não versionado) e no repo do projeto. Lição sobe anônima ou não sobe.
+12. Versão: uma carga roda numa tag fixa do mestre (`VERSION` + `projeto.mestre_versao`). Não atualizar o método no meio da carga — invalida validação já rodada. Evoluir só depois do wrapup.
 
 ## Ciclo
 | Intenção | Claude | Todas as IAs |
@@ -51,8 +52,8 @@
 
 ## Config
 `config.example.yaml` → copiar para `config.yaml` (ou para o repo do cliente).
-Campo obrigatório: `projeto.nome`. Totais, OBNI, OUSG, skips, datas saem **daquele** SAP e daquela planilha.
+Campos obrigatórios: `projeto.nome` e `projeto.mestre_versao`. Totais, OBNI, OUSG, skips e datas saem **daquele** SAP e daquela planilha.
 
 ## Estado
-- **Fase**: mestre v1 — método extraído; repo público-por-suposição, sem dado de cliente; pronto para a próxima carga nomeada
+- **Fase**: mestre v1.0.0 (ver `VERSION` / `CHANGELOG.md`) — método extraído; repo público-por-suposição, sem dado de cliente; pronto para a próxima carga nomeada
 - Dinâmico: `memory/handoff.md`

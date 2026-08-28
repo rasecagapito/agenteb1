@@ -4,9 +4,9 @@
 Histórico do **projeto cliente** e promoção de método para o **mestre**.
 
 ## Função
-- `memory/history/YYYY-MM-DD-HHMM-sessao.md` no repo do cliente.
+- `memory/history/YYYY-MM-DD-HHMM-sessao.md` no repo da carga (esqueleto: `templates/projeto/`), com `mestre_versao`.
 - Learning pontual se o erro for reutilizável.
-- Ao fechar carga: `automation/procedures/evoluir.md` no mestre-impostos.
+- Ao fechar carga: `automation/procedures/evoluir.md` no mestre — lição anônima + bump de `VERSION`/`CHANGELOG.md` + tag.
 - Estado estático só em AGENTS.md do mestre (fase). Dinâmico em handoff.
 
 ## Contexto

@@ -57,6 +57,18 @@ Detalhe: `providers/registry.md`. Slash commands Claude em `.claude/commands/`; 
 - Planilha fiscal, INSERT com AbsId, lista de filiais/PNs, OBNI de outro SAP.
 - Totais (699, 6522, etc.) — saem da geração **deste** projeto.
 
+## Versão
+
+`VERSION` (hoje `1.0.0`) + `CHANGELOG.md`. Tags `vX.Y.Z` no GitHub.
+
+- **MAJOR** doutrina/estrutura muda · **MINOR** método/query/script novo · **PATCH** correção sem mudar método.
+- Uma carga roda numa **tag fixa**: `git checkout vX.Y.Z`, gravado em `projeto.mestre_versao`. Trocar de versão no meio da carga invalida validação já rodada.
+- Atualizar entre cargas: `git pull --ff-only` e ler o `CHANGELOG.md` desde a tag anterior.
+
+## Repositório da carga
+
+O dado do cliente **nunca** fica aqui. Esqueleto em `templates/projeto/` — copiar para fora, renomear com o nome da carga, manter privado.
+
 ## Evoluir a cada projeto
 
 O mestre **tem** de melhorar depois de cada cliente. Ver `context/evolucao.md`.

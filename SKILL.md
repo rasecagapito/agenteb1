@@ -13,7 +13,7 @@ description: >-
 Ler `AGENTS.md` e seguir `automation/procedures/carga.md`.
 
 ## Obrigatório no arranque
-1. Nome do projeto (`config.yaml` → `projeto.nome`). Sem nome, parar.
+1. Nome do projeto (`config.yaml` → `projeto.nome`) e tag do mestre (`projeto.mestre_versao`). Sem nome, parar.
 2. Não copiar IDs, nomes ou totais de outra carga.
 3. Extrair mestres **deste** CompanyDB (OBNI, OUSG, OSTC, TCD1 KeyFld).
 

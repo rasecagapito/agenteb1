@@ -2,9 +2,11 @@
 
 Provider-neutro. Claude: `/carga`. Outras IAs: "faz a carga do projeto NOME".
 
-## 0. Identidade
+## 0. Identidade e versão
 - `projeto.nome` informado pelo humano ou em `config.yaml`. Vazio → parar.
 - Não carregar config de outro nome.
+- Pinar o mestre na tag desta carga: `git checkout v{X.Y.Z}` (última tag, salvo combinação em contrário). Gravar em `projeto.mestre_versao`.
+- Daí até o wrapup, não atualizar o mestre. Método novo no meio da carga invalida validação já rodada.
 
 ## 1. TCD1
 - Tela Definição. Rodar `templates/sql/Q02_TCD1.sql`.

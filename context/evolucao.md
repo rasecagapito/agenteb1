@@ -19,9 +19,10 @@ Não promover:
 - Textos de utilização de um cliente
 
 ## Onde gravar
-- Dados, SQL e history da carga: repositório **do projeto**, fora deste pacote.
+- Dados, SQL e history da carga: repositório **do projeto**, fora deste pacote (esqueleto em `templates/projeto/`).
 - Neste pacote, só a lição técnica: `memory/learnings/{tema}.md`, escrita como regra geral.
 - Handoff do mestre: `memory/handoff.md` (sem nome de cliente).
+- Toda promoção fecha com bump de `VERSION` + entrada no `CHANGELOG.md` + tag. Mudança sem tag não chega ao próximo analista.
 
 ## Privacidade
 Este repo é público-por-suposição. Nenhum arquivo daqui identifica cliente, carga ou base.
