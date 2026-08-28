@@ -204,6 +204,16 @@ def ler_grade_tcd2(cfg: dict) -> pd.DataFrame:
     df["AbsId"] = df.index + 1
     return df
 
+def exportar_grade(df: pd.DataFrame, out_dir: Path, stem: str) -> Path:
+    """Grava a grade já filtrada e numerada, para a camada seguinte referenciar AbsId.
+
+    Sem isto o analista não tem como montar TCD3_CARGA/TCD5_CARGA: os AbsId nascem
+    da numeração pós-skip, que não existe no arquivo de entrada.
+    """
+    dest = out_dir / f"{stem}.xlsx"
+    df.to_excel(dest, index=False)
+    return dest
+
 
 def arg_config() -> Path:
     p = argparse.ArgumentParser()

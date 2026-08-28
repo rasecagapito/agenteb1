@@ -169,5 +169,96 @@ class TestLotes(Base):
         self.assertEqual(len(self.inserts("TCD2", "TCD2_INSERT")), 5)
 
 
+class TestTcd3MultiPeriodo(Base):
+    """N vigências por TCD2, via TCD3_CARGA.xlsx."""
+
+    GRADE2 = [
+        {"Prioridade": 1, "AbsId_TCD1": 101, "DispOrder": 1, "KeyFld_1_V": "A"},
+        {"Prioridade": 1, "AbsId_TCD1": 101, "DispOrder": 2, "KeyFld_1_V": "B"},
+    ]
+
+    def com_periodos(self, periodos, **over):
+        cfg = self.montar(grade(self.GRADE2), **over)
+        d = self.tmp / "saida" / NOME / "TCD3"
+        d.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(periodos).to_excel(d / "TCD3_CARGA.xlsx", index=False)
+        return cfg
+
+    def test_varias_vigencias_por_tcd2(self):
+        cfg = self.com_periodos([
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-01-01", "EfctTo": "2026-06-30"},
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-07-01", "EfctTo": "2026-12-31"},
+            {"AbsId_TCD2": 1, "EfctFrom": "2027-01-01", "EfctTo": None},
+            {"AbsId_TCD2": 2, "EfctFrom": "2026-01-01", "EfctTo": None},
+        ])
+        r = self.rodar("gerar_tcd3.py", cfg)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        linhas = self.inserts("TCD3", "TCD3_INSERT")
+        self.assertEqual(len(linhas), 4)
+        absid = [int(re.search(r"VALUES \((\d+),", l).group(1)) for l in linhas]
+        tcd2 = [int(re.search(r"VALUES \(\d+,\d+,(\d+),", l).group(1)) for l in linhas]
+        self.assertEqual(absid, [1, 2, 3, 4], "AbsId da TCD3 é sequencial próprio")
+        self.assertEqual(tcd2, [1, 1, 1, 2], "Tcd2Id repete na mesma combinação")
+
+    def test_grade_tcd3_exportada_para_a_tcd5(self):
+        cfg = self.com_periodos([
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-01-01", "EfctTo": None},
+            {"AbsId_TCD2": 2, "EfctFrom": "2026-01-01", "EfctTo": None},
+        ])
+        self.rodar("gerar_tcd3.py", cfg)
+        g = pd.read_excel(self.tmp / "saida" / NOME / "TCD3" / "TCD3_GRADE.xlsx")
+        self.assertEqual(list(g["AbsId"]), [1, 2])
+        self.assertEqual(list(g["AbsId_TCD2"]), [1, 2])
+
+    def test_periodos_sobrepostos_param(self):
+        cfg = self.com_periodos([
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-01-01", "EfctTo": "2026-08-31"},
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-06-01", "EfctTo": None},
+            {"AbsId_TCD2": 2, "EfctFrom": "2026-01-01", "EfctTo": None},
+        ])
+        r = self.rodar("gerar_tcd3.py", cfg)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("sobrepostos", r.stderr)
+
+    def test_dois_periodos_abertos_na_mesma_tcd2(self):
+        cfg = self.com_periodos([
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-01-01", "EfctTo": None},
+            {"AbsId_TCD2": 1, "EfctFrom": "2026-07-01", "EfctTo": None},
+            {"AbsId_TCD2": 2, "EfctFrom": "2026-01-01", "EfctTo": None},
+        ])
+        r = self.rodar("gerar_tcd3.py", cfg)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("período aberto", r.stderr)
+
+    def test_absid_tcd2_de_prioridade_skipada(self):
+        cfg = self.com_periodos(
+            [{"AbsId_TCD2": 1, "EfctFrom": "2026-01-01", "EfctTo": None},
+             {"AbsId_TCD2": 2, "EfctFrom": "2026-01-01", "EfctTo": None},
+             {"AbsId_TCD2": 9, "EfctFrom": "2026-01-01", "EfctTo": None}],
+        )
+        r = self.rodar("gerar_tcd3.py", cfg)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("AbsId_TCD2 inexistente", r.stderr)
+
+    def test_tcd2_sem_vigencia_para(self):
+        cfg = self.com_periodos([{"AbsId_TCD2": 1, "EfctFrom": "2026-01-01", "EfctTo": None}])
+        r = self.rodar("gerar_tcd3.py", cfg)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("sem nenhuma vigência", r.stderr)
+
+
+class TestGradeExportada(Base):
+    def test_tcd2_grade_numerada_pos_skip(self):
+        cfg = self.montar(
+            grade([{"Prioridade": p, "AbsId_TCD1": 100 + p, "DispOrder": 1, "KeyFld_1_V": f"V{p}"}
+                   for p in (1, 2, 3)]),
+            skip_prioridades=[2],
+        )
+        self.rodar("gerar_tcd2.py", cfg)
+        g = pd.read_excel(self.tmp / "saida" / NOME / "TCD2" / "TCD2_GRADE.xlsx")
+        self.assertEqual(list(g["AbsId"]), [1, 2])
+        self.assertEqual(list(g["Prioridade"]), [1, 3])
+
+
 if __name__ == "__main__":
     unittest.main()

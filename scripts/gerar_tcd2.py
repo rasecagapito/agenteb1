@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lib_tcd import (
     arg_config,
     batch_size,
+    exportar_grade,
     ler_grade_tcd2,
     load_config,
     nval,
@@ -60,7 +61,9 @@ def main():
         "",
     ]
     write_batches(rows, out, "TCD2_INSERT", batch_size(cfg), header)
+    grade = exportar_grade(df, out, "TCD2_GRADE")
     print(nome, "TCD2", len(rows), "->", out)
+    print("grade numerada:", grade.name, "— use AbsId dela na TCD3_CARGA")
 
 
 if __name__ == "__main__":

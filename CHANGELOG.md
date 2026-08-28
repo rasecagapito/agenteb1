@@ -10,6 +10,23 @@ Toda carga registra em que versão rodou (`projeto.mestre_versao`). Não trocar 
 
 ## [Não publicado]
 
+## [1.2.0] — 2026-08-28
+
+### Adicionado
+- `TCD3/TCD3_CARGA.xlsx` (opcional): N vigências por TCD2, para a combinação de chaves que
+  muda de código ao longo do tempo. Tem precedência sobre `modo_teste` e sobre a produção 1:1.
+  Colunas `AbsId_TCD2`, `EfctFrom`, `EfctTo`.
+- Validação de vigência antes de gerar: períodos sobrepostos na mesma TCD2, mais de um período
+  aberto na mesma TCD2, `AbsId_TCD2` fora da grade e TCD2 sem nenhuma vigência interrompem a
+  geração. Sobreposição tornaria a determinação ambígua no SAP e só apareceria na tela.
+- Grades exportadas — `TCD2/TCD2_GRADE.xlsx` e `TCD3/TCD3_GRADE.xlsx` — já filtradas e
+  numeradas, para a camada seguinte referenciar AbsId em vez de adivinhar.
+- Learning `vigencia-tcd3.md`. Testes: 17 casos.
+
+### Em aberto
+- Montar `TCD2_CARGA.xlsx` / `TCD5_CARGA.xlsx` a partir da planilha fiscal continua manual.
+  Automatizar exigiria fixar o formato da planilha sem ter uma em mãos.
+
 ## [1.1.0] — 2026-08-28
 
 ### Corrigido
@@ -28,10 +45,6 @@ Toda carga registra em que versão rodou (`projeto.mestre_versao`). Não trocar 
   produção da TCD3, `NULL` em slot vazio, fatiamento.
 - Contrato das grades de entrada documentado em `scripts/README.md`.
 - Learning `grade-unica.md`.
-
-### Em aberto
-- Montar `TCD2_CARGA.xlsx` / `TCD5_CARGA.xlsx` a partir da planilha fiscal continua manual.
-  Automatizar exigiria fixar o formato da planilha sem ter uma em mãos.
 
 ## [1.0.0] — 2026-08-27
 

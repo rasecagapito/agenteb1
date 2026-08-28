@@ -33,6 +33,22 @@ Ficam em `saida/{nome}/`, junto do que é gerado.
 (1-based) vira `TCD2.AbsId = i` e `TCD3.Tcd2Id = i`. Os dois geradores leem a grade
 pela mesma função (`lib_tcd.ler_grade_tcd2`) justamente para não divergirem.
 
+### `TCD3/TCD3_CARGA.xlsx` — opcional, para várias vigências na mesma regra
+
+Só é necessário quando uma combinação de chaves muda de código ao longo do tempo
+(N vigências por TCD2). Se o arquivo existe, ele manda — `modo_teste` e as colunas
+de data da grade TCD2 são ignoradas.
+
+| Coluna | Obrigatória | Nota |
+|---|---|---|
+| `AbsId_TCD2` | sim | AbsId de `TCD2_GRADE.xlsx`, não a linha da planilha |
+| `EfctFrom` | sim | início da vigência |
+| `EfctTo` | não | vazio ou `2099-12-31` → aberto |
+
+Recusa a gerar quando: `AbsId_TCD2` não existe na grade (prioridade skipada, por
+exemplo), períodos se sobrepõem na mesma TCD2, há mais de um período aberto na
+mesma TCD2, ou alguma TCD2 fica sem nenhuma vigência.
+
 ### `TCD5/TCD5_CARGA.xlsx`
 
 `AbsId_TCD3`, `UsageCode` **ou** `Usage_texto`, `TaxCode`, `ExpTaxCode`, `PurTaxCode`.
@@ -40,14 +56,24 @@ Sem match em OUSG a linha vai para `BLOQUEADOS.xlsx` — não se inventa ID.
 
 OUSG: exportar `templates/sql/Q03_OUSG.sql` neste CompanyDB → `ousg.extracao`.
 
+## Grades exportadas
+
+Cada gerador grava a grade que realmente usou, já filtrada e numerada:
+
+- `TCD2/TCD2_GRADE.xlsx` — base para montar `TCD3_CARGA.xlsx`
+- `TCD3/TCD3_GRADE.xlsx` — base para montar `TCD5_CARGA.xlsx` (`AbsId_TCD3`)
+
+Os AbsId nascem da numeração pós-skip: não estão no arquivo de entrada e não devem
+ser adivinhados.
+
 ## TCD3: teste e produção
 
 - `tcd3.modo_teste: true` — um período aberto por TCD2, a partir de `tcd3.test_from`.
 - `tcd3.modo_teste: false` — uma vigência por linha da grade, lendo `EfctFrom`/`EfctTo`.
   Data faltando ou `EfctTo` anterior a `EfctFrom` → para, sem gerar parcial.
 
-Hoje a produção assume **uma vigência por combinação de chaves** (1:1 TCD2→TCD3).
-Vários períodos para a mesma combinação ainda não são suportados.
+Para várias vigências na mesma combinação, monte `TCD3_CARGA.xlsx` (acima) — ele
+tem precedência sobre os dois modos.
 
 ## Testes
 

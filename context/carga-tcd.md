@@ -19,7 +19,10 @@ Gerar: `scripts/gerar_tcd2.py`. Validar: `templates/sql/Q22_TCD2_validar.sql` (t
 MI: `TaxCode` fica NULL. Código é TCD5.
 
 - **Teste** (`tcd3.modo_teste: true`): 1 período aberto por TCD2. `EfctFrom` = `tcd3.test_from` combinado com o cliente. `EfctTo` = NULL.
-- **Produção** (`modo_teste: false`): vigências da planilha desta carga, nas colunas `EfctFrom`/`EfctTo` da grade TCD2. Data faltando → o gerador para, não gera parcial. Hoje: uma vigência por combinação (1:1).
+- **Produção 1:1** (`modo_teste: false`): vigências nas colunas `EfctFrom`/`EfctTo` da grade TCD2.
+- **Produção N:1** (`TCD3/TCD3_CARGA.xlsx`): várias vigências para a mesma combinação. Tem precedência.
+
+Data faltando, período sobreposto, dois períodos abertos na mesma TCD2 ou TCD2 sem vigência → o gerador para. Não gera parcial: período sobreposto torna a determinação ambígua no SAP.
 
 Nunca gravar `2099-12-31` em `EfctTo`.
 
